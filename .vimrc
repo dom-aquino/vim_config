@@ -61,6 +61,7 @@ set laststatus=2
 set colorcolumn=80
 set noshowmode
 set noshowcmd
+autocmd BufRead,BufNewFile *.htm,*.html setlocal tabstop=2 shiftwidth=2 softtabstop=2
 
 nnoremap <S-Left> :tabprevious<CR>
 nnoremap <S-Right> :tabnext<CR>
