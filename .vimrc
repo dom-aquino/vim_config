@@ -1,10 +1,7 @@
-" Vim Configuration
-" By Dom Aquino
-" June 2021
+" VUNDLE SETUP START
 
-" START OF VUNDLE SETUP 
-set nocompatible
-filetype off
+set nocompatible              " be iMproved, required
+filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -15,11 +12,17 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-" Install NERDTree
+" install NERDTree
 Plugin 'preservim/nerdtree'
 
-" Install gruvbox
+" install gruvbox theme
 Plugin 'morhetz/gruvbox'
+
+" install lightline
+Plugin 'itchyny/lightline.vim'
+
+" install HTML auto close
+Plugin 'alvan/vim-closetag'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -36,31 +39,78 @@ filetype plugin indent on    " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 autocmd vimenter * ++nested colorscheme gruvbox
-set bg=dark
+set background=dark
 
-" END OF VUNDLE SETUP
+" VUNDLE SETUP END
 
-syntax on                              " syntax highlighting
-set tabstop=4                          " set tab key as four spaces
-set shiftwidth=4                       " set width as four spaces
-set expandtab                          " convert tab to spaces 
-set autoindent                         " auto indentation, based on previous lines
-set number                             " show line number
-set nowrap                             " texts will not be wrapped once it's past the screen
-set laststatus=2                       " display file location
-set noswapfile                         " prevent swap files from being created
-set nobackup                           " prevent backup files from being created
-set list                               " set list
-set listchars=eol:$,tab:>>,trail:.     " render chars for EOL, tab, and trailing spaces
+syntax on
+
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+set autoindent
+set smarttab
+set number
+set nowrap
+set noswapfile
+set nobackup
+set list
+set listchars=eol:$,tab:>>,trail:.
+set laststatus=2
 set colorcolumn=80
+set noshowmode
+set noshowcmd
 
-" Tab switching
-noremap <S-J> :tabprevious<cr>
-noremap <S-K> :tabnext<cr>
-
-" NERDTree config
+nnoremap <S-Left> :tabprevious<CR>
+nnoremap <S-Right> :tabnext<CR>
+nnoremap <S-j> :tabprevious<CR>
+nnoremap <S-k> :tabnext<CR>
 nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
+
+" filenames like *.xml, *.html, *.xhtml, ...
+" These are the file extensions where this plugin is enabled.
+"
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml'
+
+" filenames like *.xml, *.xhtml, ...
+" This will make the list of non-closing tags self-closing in the specified files.
+"
+let g:closetag_xhtml_filenames = '*.xhtml,*.jsx'
+
+" filetypes like xml, html, xhtml, ...
+" These are the file types where this plugin is enabled.
+"
+let g:closetag_filetypes = 'html,xhtml,phtml'
+
+" filetypes like xml, xhtml, ...
+" This will make the list of non-closing tags self-closing in the specified files.
+"
+let g:closetag_xhtml_filetypes = 'xhtml,jsx'
+
+" integer value [0|1]
+" This will make the list of non-closing tags case-sensitive (e.g. `<Link>` will be closed while `<link>` won't.)
+"
+let g:closetag_emptyTags_caseSensitive = 1
+
+" dict
+" Disables auto-close if not in a "valid" region (based on filetype)
+"
+let g:closetag_regions = {
+    \ 'typescript.tsx': 'jsxRegion,tsxRegion',
+    \ 'javascript.jsx': 'jsxRegion',
+    \ 'typescriptreact': 'jsxRegion,tsxRegion',
+    \ 'javascriptreact': 'jsxRegion',
+    \ }
+
+" Shortcut for closing tags, default is '>'
+"
+let g:closetag_shortcut = '>'
+
+" Add > at current position without closing the current tag, default is ''
+"
+let g:closetag_close_shortcut = '<leader>>'
 
