@@ -16,7 +16,7 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'preservim/nerdtree'
 
 " install gruvbox theme
-Plugin 'morhetz/gruvbox'
+" Plugin 'morhetz/gruvbox'
 
 " install lightline
 Plugin 'itchyny/lightline.vim'
@@ -38,7 +38,8 @@ filetype plugin indent on    " required
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
-autocmd vimenter * ++nested colorscheme gruvbox
+" autocmd vimenter * ++nested colorscheme gruvbox
+syntax enable
 set background=dark
 
 " VUNDLE SETUP END
@@ -115,3 +116,4 @@ let g:closetag_shortcut = '>'
 "
 let g:closetag_close_shortcut = '<leader>>'
 
+let g:buffet_always_show_tabline = 0
