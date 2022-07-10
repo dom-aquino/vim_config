@@ -1,11 +1,8 @@
 " NVim Configuration
 " by Dom Aquino
-" Updated - July 9, 2022
+" Updated - July 10, 2022
 
 call plug#begin()
-
-" Install NERDTree
-"Plug 'preservim/nerdtree'
 
 " Install vim-go
 Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
@@ -19,17 +16,20 @@ Plug 'nvim-lualine/lualine.nvim'
 " Install nvim-tabline
 Plug 'crispgm/nvim-tabline'
 
-" Install nvim-web-devicons
-Plug 'kyazdani42/nvim-web-devicons'
-
 " Install nvim-tree
 Plug 'kyazdani42/nvim-tree.lua'
+
+" Install gruvbox
+Plug 'morhetz/gruvbox'
+
+" Install CoC
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()
 
 set background=dark
-
 syntax on
+colorscheme gruvbox
 
 set tabstop=4
 set shiftwidth=4
@@ -49,6 +49,7 @@ set list
 set listchars=eol:$,tab:..,trail:.
 set encoding=utf-8
 set completeopt-=preview
+set termguicolors
 
 nnoremap <S-Left> :tabprevious<CR>
 nnoremap <S-Right> :tabnext<CR>
@@ -65,16 +66,31 @@ let g:go_doc_keywordprg_enabled = 0
 autocmd FileType go nmap <C-d> <Plug>(go-doc)
 autocmd FileType go nmap <C-f> <Plug>(go-def)
 
+" CoC-specific configurations
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ CheckBackspace() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
 lua << EOF
   require('nvim-treesitter.configs').setup{
     -- A list of parser names, or "all"
-    ensure_installed = { "c", "cpp", "python", "go", "javascript" },
+    ensure_installed = { "go" },
 
     -- Install parsers synchronously (only applied to `ensure_installed`)
     sync_install = false,
 
     -- Automatically install missing parsers when entering buffer
-    auto_install = true,
+    auto_install = false,
 
     -- List of parsers to ignore installing (for "all")
     -- ignore_install = {},
@@ -98,7 +114,7 @@ lua << EOF
   }
   require('lualine').setup {
     options = {
-      icons_enabled = true,
+      icons_enabled = false,
       theme = 'gruvbox',
       component_separators = { left = '', right = ''},
       section_separators = { left = '', right = ''},
@@ -131,6 +147,30 @@ lua << EOF
     modify_indicator = '[+]', -- modify indicator
     no_name = '[No name]',    -- no name buffer name
   })
-  require("nvim-tree").setup()
+  require("nvim-tree").setup({
+    sort_by = "case_sensitive",
+    view = {
+      adaptive_size = true,
+      mappings = {
+        list = {
+          { key = "u", action = "dir_up" },
+        },
+      },
+    },
+    renderer = {
+      group_empty = true,
+      icons = {
+          show = {
+            file = false,
+            folder = false,
+            folder_arrow = false,
+            git = false
+          },
+      },
+    },
+    filters = {
+      dotfiles = true,
+    },
+  })
 EOF
 
