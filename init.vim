@@ -1,29 +1,29 @@
 " NVim Configuration
 " by Dom Aquino
-" Updated - July 10, 2022
+" Updated - July 13, 2022
 
 call plug#begin()
 
-" Install vim-go
-Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
+    " Install vim-go
+    Plug 'fatih/vim-go', {'do': ':GoUpdateBinaries'}
 
-" Install Treesitter
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+    " Install Treesitter
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
-" Install lualine
-Plug 'nvim-lualine/lualine.nvim'
+    " Install lualine
+    Plug 'nvim-lualine/lualine.nvim'
 
-" Install nvim-tabline
-Plug 'crispgm/nvim-tabline'
+    " Install nvim-tabline
+    Plug 'crispgm/nvim-tabline'
 
-" Install nvim-tree
-Plug 'kyazdani42/nvim-tree.lua'
+    " Install NERDTree
+    Plug 'preservim/nerdtree'
 
-" Install gruvbox
-Plug 'morhetz/gruvbox'
+    " Install gruvbox
+    Plug 'morhetz/gruvbox'
 
-" Install CoC
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    " Install CoC
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()
 
@@ -50,36 +50,47 @@ set listchars=eol:$,tab:..,trail:.
 set encoding=utf-8
 set completeopt-=preview
 set termguicolors
-
-nnoremap <S-Left> :tabprevious<CR>
-nnoremap <S-Right> :tabnext<CR>
-nnoremap <S-j> :tabprevious<CR>
-nnoremap <S-k> :tabnext<CR>
-nnoremap <leader>n :NvimTreeFocus<CR>
-nnoremap <C-t> :NvimTreeOpen<CR>
-nnoremap <C-c> :NvimTreeClose<CR>
-nnoremap <S-c> :noh<CR>
-
 let g:go_def_mapping_enabled = 0
 let g:go_doc_keywordprg_enabled = 0
+let g:NERDTreeShowHidden = 1
 
-autocmd FileType go nmap <C-d> <Plug>(go-doc)
-autocmd FileType go nmap <C-f> <Plug>(go-def)
+" Basic keystrokes
+    nnoremap <S-j> :tabprevious<CR>
+    nnoremap <S-k> :tabnext<CR>
+    nnoremap <S-c> :noh<CR>
+    inoremap jk <Esc>
 
-" CoC-specific configurations
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ CheckBackspace() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" NERDTree
+    nnoremap <leader>n :NERDTreeFocus<CR>
+    nnoremap <C-n> :NERDTree<CR>
+    nnoremap <C-t> :NERDTreeToggle<CR>
+    nnoremap <C-f> :NERDTreeFind<CR>
 
-function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+    " Start NERDTree when Vim is started without file arguments.
+    autocmd StdinReadPre * let s:std_in=1
+    autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+
+    " Exit Vim if NERDTree is the only window remaining in the only tab.
+    autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+" Vim-Go
+    autocmd FileType go nmap <C-d> <Plug>(go-doc)
+    autocmd FileType go nmap <C-f> <Plug>(go-def)
+
+" CoC
+    " Use tab for trigger completion with characters ahead and navigate.
+    " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+    " other plugin before putting this into your config.
+    inoremap <silent><expr> <TAB>
+          \ pumvisible() ? "\<C-n>" :
+          \ CheckBackspace() ? "\<TAB>" :
+          \ coc#refresh()
+    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+    function! CheckBackspace() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
 
 lua << EOF
   require('nvim-treesitter.configs').setup{
@@ -90,7 +101,7 @@ lua << EOF
     sync_install = false,
 
     -- Automatically install missing parsers when entering buffer
-    auto_install = false,
+    auto_install = true,
 
     -- List of parsers to ignore installing (for "all")
     -- ignore_install = {},
@@ -146,31 +157,6 @@ lua << EOF
     show_modify = true,       -- show buffer modification indicator
     modify_indicator = '[+]', -- modify indicator
     no_name = '[No name]',    -- no name buffer name
-  })
-  require("nvim-tree").setup({
-    sort_by = "case_sensitive",
-    view = {
-      adaptive_size = true,
-      mappings = {
-        list = {
-          { key = "u", action = "dir_up" },
-        },
-      },
-    },
-    renderer = {
-      group_empty = true,
-      icons = {
-          show = {
-            file = false,
-            folder = false,
-            folder_arrow = false,
-            git = false
-          },
-      },
-    },
-    filters = {
-      dotfiles = true,
-    },
   })
 EOF
 
