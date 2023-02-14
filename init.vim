@@ -1,6 +1,6 @@
 " NVim Configuration
 " by Dom Aquino
-" Updated - July 13, 2022
+" Updated - February 14, 2023
 
 call plug#begin()
 
@@ -24,6 +24,9 @@ call plug#begin()
 
     " Install CoC
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+    " Install devicons
+    Plug 'ryanoasis/vim-devicons'
 
 call plug#end()
 
@@ -87,10 +90,19 @@ let g:NERDTreeShowHidden = 1
           \ coc#refresh()
     inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
+    " Make <CR> to accept selected completion item or notify coc.nvim to format
+    " <C-g>u breaks current undo, please make your own choice
+    inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                                  \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
     function! CheckBackspace() abort
       let col = col('.') - 1
       return !col || getline('.')[col - 1]  =~# '\s'
     endfunction
+
+" General configurations
+" Tabs are 2 spaces for html and javascript files
+autocmd BufRead,BufNewFile *.htm,*.html,*.js setlocal tabstop=2 shiftwidth=2 softtabstop=2
 
 lua << EOF
   require('nvim-treesitter.configs').setup{
@@ -125,7 +137,7 @@ lua << EOF
   }
   require('lualine').setup {
     options = {
-      icons_enabled = false,
+      icons_enabled = true,
       theme = 'gruvbox',
       component_separators = { left = '', right = ''},
       section_separators = { left = '', right = ''},
