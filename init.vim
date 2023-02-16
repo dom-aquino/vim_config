@@ -1,6 +1,6 @@
 " NVim Configuration
 " by Dom Aquino
-" Updated - February 14, 2023
+" Updated - July 13, 2022
 
 call plug#begin()
 
@@ -28,11 +28,13 @@ call plug#begin()
     " Install devicons
     Plug 'ryanoasis/vim-devicons'
 
+    Plug 'Tsuzat/NeoSolarized.nvim', { 'branch': 'master' }
+
 call plug#end()
 
 set background=dark
 syntax on
-colorscheme gruvbox
+colorscheme NeoSolarized
 
 set tabstop=4
 set shiftwidth=4
@@ -138,7 +140,7 @@ lua << EOF
   require('lualine').setup {
     options = {
       icons_enabled = true,
-      theme = 'gruvbox',
+      theme = 'NeoSolarized',
       component_separators = { left = '', right = ''},
       section_separators = { left = '', right = ''},
       disabled_filetypes = {},
