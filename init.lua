@@ -82,6 +82,21 @@ keyset("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
 keyset("i", "<cr>", [[coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"]], opts)
 
 ------------------
+-- Autocommands --
+------------------
+vim.api.nvim_create_autocmd({'StdinReadPre'}, {
+    command = "let s:std_in=1",
+})
+
+vim.api.nvim_create_autocmd({"VimEnter"}, {
+    command = "if argc() == 0 && !exists('s:std_in') | NERDTree | endif"
+})
+
+vim.api.nvim_create_autocmd({"BufEnter"}, {
+    command = "if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif"
+})
+
+------------------
 -- Plugins Setup--
 ------------------
 require('nvim-treesitter.configs').setup{
@@ -97,7 +112,7 @@ require('nvim-treesitter.configs').setup{
 require('lualine').setup{
     options = {
       icons_enabled = true,
-      theme = 'gruvbox',
+      theme = 'auto',
       component_separators = { left = '', right = ''},
       section_separators = { left = '', right = ''},
       disabled_filetypes = {
