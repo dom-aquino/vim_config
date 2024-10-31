@@ -1,6 +1,6 @@
 -- Neovim Configuration
 -- by Dom Aquino
--- Updated - July 12, 2023
+-- Updated - November 16, 2023
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -42,6 +42,12 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
     -- Install zen mode
     Plug 'folke/zen-mode.nvim'
 
+    -- Install plenary.nvim pre-requisite of telescope
+    Plug 'nvim-lua/plenary.nvim'
+
+    -- Install telescope
+    Plug 'nvim-telescope/telescope.nvim'
+
 vim.call('plug#end')
 
 -------------
@@ -66,6 +72,10 @@ vim.opt.signcolumn = "yes"                               -- something to do abou
 
 vim.cmd("let g:gruvbox_contrast_dark = 'medium'")
 vim.cmd("colorscheme gruvbox")
+vim.cmd("let g:loaded_python3_provider = 0")
+vim.cmd("let g:loaded_ruby_provider = 0")
+vim.cmd("let g:loaded_node_provider = 0")
+vim.cmd("let g:loaded_perl_provider = 0")
 
 --------------
 -- Mappings --
@@ -77,6 +87,7 @@ vim.keymap.set('i', 'jk', '<Esc>')
 
 vim.keymap.set('n', 'zm', ':ZenMode<CR>')
 vim.keymap.set('n', '<C-t>', ':NvimTreeToggle<CR>')
+vim.keymap.set('n', '<C-f>', ':Telescope find_files<CR>')
 
 -- CoC Setup
 local keyset = vim.keymap.set
@@ -101,34 +112,12 @@ vim.api.nvim_create_autocmd({"BufRead"}, {
 ---------------
 -- Functions --
 ---------------
-local function my_on_attach(bufnr)
-    local api = require "nvim-tree.api"
-
-    local function opts(desc)
-        return {
-            desc = "nvim-tree: " .. desc,
-            buffer = bufnr, noremap = true,
-            silent = true, nowait = true
-        }
-    end
-
-    vim.keymap.set('n', '<C-t>', api.tree.focus(), opts('Open Tree'))
-    vim.keymap.set('n', '<C-r>', api.tree.reload(), opts('Reload Tree'))
-    vim.keymap.set('n', '<C-v>', api.node.open.tab(), opts('New Tab'))
-end
 
 ------------------
 -- Plugins Setup--
 ------------------
-require('nvim-treesitter.configs').setup{
-    ensure_installed = {},
-    sync_install = false,
-    auto_install = true,
-    highlight = {
-        enable = true,
-        additional_vim_regex_highlighting = false,
-    }
-}
+
+require("nvim-tree").setup()
 
 require('lualine').setup{
     options = {
@@ -182,17 +171,13 @@ require('tabline').setup({
     inactive_tab_max_length = 0  -- max length of inactive tab titles, 0 to ignore
 })
 
-require("nvim-tree").setup({
-    sort_by = "case_sensitive",
-    view = {
-        width = 30,
-    },
-    renderer = {
-        group_empty = true,
-    },
-    filters = {
-        dotfiles = true,
-    },
-    --on_attach = my_on_attach,
-})
+require('nvim-treesitter.configs').setup{
+    ensure_installed = {},
+    sync_install = false,
+    auto_install = true,
+    highlight = {
+        enable = true,
+        additional_vim_regex_highlighting = false,
+    }
+}
 
