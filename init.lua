@@ -1,6 +1,6 @@
 -- Neovim Configuration
 -- by Dom Aquino
--- Updated - November 16, 2023
+-- Updated - February 7, 2025
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -47,6 +47,9 @@ vim.call('plug#begin', '~/.config/nvim/plugged')
 
     -- Install telescope
     Plug 'nvim-telescope/telescope.nvim'
+
+    -- Install evil robot
+    Plug 'github/copilot.vim'
 
 vim.call('plug#end')
 
@@ -178,6 +181,13 @@ require('nvim-treesitter.configs').setup{
     highlight = {
         enable = true,
         additional_vim_regex_highlighting = false,
+    }
+}
+
+require('zen-mode').setup{
+    window = {
+        width = 90,
+        height = 40
     }
 }
 
